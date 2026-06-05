@@ -1,0 +1,40 @@
+package ir.mrghost.gamebase.viewmodel
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import ir.mrghost.gamebase.AppModule
+import ir.mrghost.gamebase.data.Game
+import ir.mrghost.gamebase.data.GameRepository
+import ir.mrghost.gamebase.utils.GameGenre
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
+
+class GamesListViewModel(
+    private val repository: GameRepository = AppModule.provideGameRepository()
+) : ViewModel() {
+    private val _query = MutableStateFlow("")
+    val query: StateFlow<String> = _query.asStateFlow()
+
+    private val _selectedGenres = MutableStateFlow(emptyList<GameGenre>())
+    val selectedGenres: StateFlow<List<GameGenre>> = _selectedGenres.asStateFlow()
+
+    val filteredGames: StateFlow<List<Game>> = combine(query, selectedGenres) { query, genres ->
+        val allGames = repository.getAllGames()
+        val searched = if (query.isBlank()) allGames
+        else allGames.filter { it.title.contains(query, ignoreCase = true) }
+        if (genres.isEmpty()) searched
+        else searched.filter { it.genre in genres }
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+
+    fun updateQuery(newQuery: String) {
+        _query.value = newQuery
+    }
+
+    fun updateGenres(genres: List<GameGenre>) {
+        _selectedGenres.value = genres
+    }
+}

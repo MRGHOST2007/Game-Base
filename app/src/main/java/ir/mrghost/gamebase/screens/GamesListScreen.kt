@@ -1,10 +1,8 @@
 package ir.mrghost.gamebase.screens
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -19,12 +17,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
@@ -39,6 +37,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -51,42 +50,27 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import ir.mrghost.gamebase.R
-import ir.mrghost.gamebase.data.FakeData
-import ir.mrghost.gamebase.data.Game
 import ir.mrghost.gamebase.utils.GameGenre
 import ir.mrghost.gamebase.utils.GameItem
 import ir.mrghost.gamebase.utils.HeaderIcon
 import ir.mrghost.gamebase.utils.TypeGameView
 import ir.mrghost.gamebase.utils.Utils
+import ir.mrghost.gamebase.viewmodel.GamesListViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GamesListScreen() {
+fun GamesListScreen(navController: NavController) {
 
-    var query by remember { mutableStateOf("") }
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by remember { mutableStateOf(false) }
 
-    val data = FakeData.gameList
-    var selectedGenres by remember { mutableStateOf(emptyList<GameGenre>()) }
-    val searchedData: List<Game> = remember(query) {
-        if (query.isBlank()) data
-        else {
-            data.filter {
-                it.title.contains(query, ignoreCase = true)
-            }
-        }
-    }
-    val filteredData: List<Game> = remember(selectedGenres, searchedData) {
-        if (selectedGenres.isEmpty()) {
-            searchedData
-        } else {
-            searchedData.filter { game ->
-                selectedGenres.contains(game.genre)
-            }
-        }
-    }
+    val viewModel: GamesListViewModel = viewModel()
+    val selectedGenres by viewModel.selectedGenres.collectAsState()
+    val query by viewModel.query.collectAsState()
+    val filteredData by viewModel.filteredGames.collectAsState()
 
     Column(
         modifier = Modifier
@@ -104,7 +88,7 @@ fun GamesListScreen() {
         ) {
             TextField(
                 value = query,
-                onValueChange = { query = it },
+                onValueChange = { viewModel.updateQuery(it) },
                 placeholder = { Text("Search") },
                 leadingIcon = {
                     Icon(
@@ -167,8 +151,11 @@ fun GamesListScreen() {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
 
-            items(filteredData.size) {
-                GameItem(filteredData[it], TypeGameView.Big)
+            items(
+                items = filteredData,
+                key = { game -> game.id }  // Add unique ID to Game class
+            ) { game ->
+                GameItem(game, TypeGameView.Big, navController)
             }
 
             item {
@@ -184,7 +171,7 @@ fun GamesListScreen() {
             sheetState,
             onDismiss = { showBottomSheet = false },
             onConfirm = {
-                selectedGenres = it
+                viewModel.updateGenres(it)
                 showBottomSheet = false
             },
             currentSelectedGenres = selectedGenres

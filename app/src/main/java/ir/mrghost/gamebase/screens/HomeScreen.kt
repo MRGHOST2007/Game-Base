@@ -1,9 +1,7 @@
 package ir.mrghost.gamebase.screens
 
-import android.widget.Toast
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
@@ -21,26 +20,25 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import ir.mrghost.gamebase.R
-import ir.mrghost.gamebase.data.FakeData
-import ir.mrghost.gamebase.utils.GameGenre
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import ir.mrghost.gamebase.utils.GameItem
 import ir.mrghost.gamebase.utils.HeaderIcon
 import ir.mrghost.gamebase.utils.TypeGameView
+import ir.mrghost.gamebase.viewmodel.HomeViewModel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavController) {
 
     val scrollState = rememberScrollState()
+    val viewModel: HomeViewModel = viewModel()
 
     Column(
         modifier = Modifier
@@ -66,19 +64,22 @@ fun HomeScreen() {
                     .height(180.dp),
                 contentAlignment = Alignment.Center
             ) {
-                TopPager()
+                TopPager(viewModel = viewModel, navController)
             }
 
-            ListRows()
+            ListRows(viewModel, navController)
 
         }
     }
 }
 
 @Composable
-private fun TopPager() {
-    val pager = rememberPagerState() { FakeData.topPager.size }
-    val coroutine = rememberCoroutineScope()
+private fun TopPager(viewModel: HomeViewModel, navController: NavController) {
+    val topPagerGames by viewModel.topPagerGames.collectAsState()
+    val pagerState = rememberPagerState(
+        initialPage = 0,
+        pageCount = { topPagerGames.size }
+    )
 
     Box(
         Modifier
@@ -86,24 +87,19 @@ private fun TopPager() {
             .clip(RoundedCornerShape(12.dp)),
         contentAlignment = Alignment.Center
     ) {
-        HorizontalPager(pager, modifier = Modifier.fillMaxSize()) {
-            GameItem(FakeData.topPager[it], TypeGameView.Big)
+        HorizontalPager(pagerState, modifier = Modifier.fillMaxSize()) {
+            GameItem(topPagerGames[it], TypeGameView.Big, navController = navController)
         }
     }
 
     LaunchedEffect(Unit) {
-        coroutine.launch {
-            while (true) {
-                delay(3000)
-                if (pager.currentPage == 2) {
-                    pager.animateScrollToPage(
-                        0,
-                        animationSpec = spring(stiffness = Spring.StiffnessMedium)
-                    )
-                    delay(3000)
-                }
-                pager.animateScrollToPage(
-                    pager.currentPage + 1,
+        while (true) {
+            delay(3000)
+            // Check if we're still active before scrolling
+            if (pagerState.pageCount > 0) {
+                val nextPage = (pagerState.currentPage + 1) % pagerState.pageCount
+                pagerState.animateScrollToPage(
+                    nextPage,
                     animationSpec = spring(stiffness = Spring.StiffnessLow)
                 )
             }
@@ -113,19 +109,24 @@ private fun TopPager() {
 }
 
 @Composable
-private fun ListRows() {
+private fun ListRows(viewModel: HomeViewModel, navController: NavController) {
 
-    val dataRow1 = FakeData.gameList.filter { it.genre == GameGenre.Action }
-    val dataRow2 = FakeData.gameList.filter { it.genre == GameGenre.Platformer }
-    val dataRow3 = FakeData.gameList.filter { it.genre == GameGenre.RPG }
+    val gameAwards by viewModel.gameAwards.collectAsState()
+    val actionGames by viewModel.actionGames.collectAsState()
+    val platformerGames by viewModel.platformerGames.collectAsState()
+    val rpgGames by viewModel.rpgGames.collectAsState()
+
 
     Text(text = "Game Awards 2026")
     LazyRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        items(FakeData.gameAwards.size) {
-            GameItem(FakeData.gameAwards[it], TypeGameView.Compact)
+        items(
+            items = gameAwards,
+            key = { it.id }
+        ) {
+            GameItem(it, TypeGameView.Compact, navController)
         }
     }
 
@@ -134,8 +135,11 @@ private fun ListRows() {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(dataRow1.size) {
-            GameItem(dataRow1[it], TypeGameView.Compact)
+        items(
+            items = actionGames,
+            key = { it.id }
+        ) {
+            GameItem(it, TypeGameView.Compact, navController)
         }
     }
 
@@ -144,8 +148,11 @@ private fun ListRows() {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(dataRow2.size) {
-            GameItem(dataRow2[it], TypeGameView.Compact)
+        items(
+            items = platformerGames,
+            key = { it.id }
+        ) {
+            GameItem(it, TypeGameView.Compact, navController)
         }
     }
 
@@ -154,8 +161,11 @@ private fun ListRows() {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(dataRow3.size) {
-            GameItem(dataRow3[it], TypeGameView.Compact)
+        items(
+            items = rpgGames,
+            key = { it.id }
+        ) {
+            GameItem(it, TypeGameView.Compact, navController)
         }
     }
 }

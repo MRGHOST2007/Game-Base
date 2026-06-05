@@ -1,6 +1,5 @@
 package ir.mrghost.gamebase.utils
 
-import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -24,19 +23,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.fontResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import ir.mrghost.gamebase.GameDetailActivity
+import androidx.navigation.NavController
 import ir.mrghost.gamebase.R
 import ir.mrghost.gamebase.data.Game
-import ir.mrghost.gamebase.ui.theme.GameBaseTheme
 
 @Composable
-fun GameItem(game: Game, typeGameView: TypeGameView) {
+fun GameItem(game: Game, typeGameView: TypeGameView, navController: NavController) {
     when (typeGameView) {
         TypeGameView.Compact -> {
             Box(
@@ -46,7 +41,7 @@ fun GameItem(game: Game, typeGameView: TypeGameView) {
                     .clip(RoundedCornerShape(12.dp)),
                 contentAlignment = Alignment.BottomCenter
             ) {
-                ContentOfItem(game)
+                ContentOfItem(game, navController)
             }
         }
 
@@ -58,7 +53,7 @@ fun GameItem(game: Game, typeGameView: TypeGameView) {
                     .clip(RoundedCornerShape(12.dp)),
                 contentAlignment = Alignment.BottomCenter
             ) {
-                ContentOfItem(game)
+                ContentOfItem(game, navController)
             }
         }
     }
@@ -66,10 +61,7 @@ fun GameItem(game: Game, typeGameView: TypeGameView) {
 }
 
 @Composable
-private fun ContentOfItem(game: Game) {
-    val context = LocalContext.current
-    val intent = Intent(context, GameDetailActivity::class.java)
-        .putExtra("game", game)
+private fun ContentOfItem(game: Game, navController: NavController) {
     Image(
         painter = painterResource(game.image),
         contentDescription = null,
@@ -78,7 +70,7 @@ private fun ContentOfItem(game: Game) {
             .clip(RoundedCornerShape(12.dp))
             .fillMaxSize()
             .clickable(onClick = {
-                context.startActivity(intent)
+                navController.navigate("detail/${game.id}")
             })
     )
     Box(
