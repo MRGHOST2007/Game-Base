@@ -23,15 +23,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -43,7 +40,6 @@ import ir.mrghost.gamebase.screens.GamesListScreen
 import ir.mrghost.gamebase.screens.HomeScreen
 import ir.mrghost.gamebase.ui.theme.GameBaseTheme
 import ir.mrghost.gamebase.utils.Utils
-import ir.mrghost.gamebase.viewmodel.GameDetailViewModel
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -66,12 +62,8 @@ class MainActivity : ComponentActivity() {
                     ) { backStackEntry ->
                         val gameId = backStackEntry.arguments?.getLong("gameId") ?: 0L
 
-                        val detailViewModel: GameDetailViewModel = viewModel()
-                        val game by detailViewModel.getGameById(gameId).collectAsState()
+                        GameDetailScreen(gameID = gameId)
 
-                        game?.let {
-                            GameDetailScreen(game = it)
-                        }
                     }
 
                 }

@@ -31,11 +31,5 @@ dependencyResolutionManagement {
     }
 }
 
-buildscript {
-    repositories {
-        maven ( url = "https://maven.myket.ir" )
-    }
-}
-
 rootProject.name = "Game Base"
 include(":app")

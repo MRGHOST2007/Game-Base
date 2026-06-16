@@ -1,18 +1,22 @@
 [versions]
-agp = "8.13.2"
+agp = "9.1.1"
 foundation = "1.10.2"
-kotlin = "2.0.21"
+kotlin = "2.4.0"
 coreKtx = "1.17.0"
 junit = "4.13.2"
 junitVersion = "1.3.0"
 espressoCore = "3.7.0"
 lifecycleRuntimeKtx = "2.10.0"
 activityCompose = "1.12.3"
-composeBom = "2024.09.00"
+composeBom = "2026.05.01"
 lifecycleViewmodelCompose = "2.8.7"
 navigationCompose = "2.8.9"
 navigationFragmentKtx = "2.9.7"
-parcelize = "1.9.0"
+parcelize = "2.4.0"
+roomKtx = "2.8.4"
+roomRuntime = "2.8.4"
+ksp = "2.3.9"
+kapt = "2.4.0"
 
 [libraries]
 androidx-compose-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "foundation" }
@@ -21,6 +25,9 @@ androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationFragmentKtx" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomKtx" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomKtx" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -40,4 +47,5 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "parcelize" }
-
+kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp"}
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kapt"}

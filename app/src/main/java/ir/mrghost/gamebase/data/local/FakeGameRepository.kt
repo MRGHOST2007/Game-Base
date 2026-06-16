@@ -1,4 +1,4 @@
-package ir.mrghost.gamebase.data
+package ir.mrghost.gamebase.data.local
 
 import android.os.Parcelable
 import androidx.annotation.DrawableRes
