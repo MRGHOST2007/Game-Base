@@ -1,6 +1,6 @@
 package ir.mrghost.gamebase.data.local.favorites
 
-import ir.mrghost.gamebase.data.local.Game
+import ir.mrghost.gamebase.data.local.games.Game
 import kotlinx.coroutines.flow.Flow
 
 class FavoritesRepository (

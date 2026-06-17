@@ -6,14 +6,17 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import ir.mrghost.gamebase.data.local.favorites.FavoriteDAO
 import ir.mrghost.gamebase.data.local.favorites.FavoriteEntity
+import ir.mrghost.gamebase.data.local.games.Game
+import ir.mrghost.gamebase.data.local.games.GameDAO
 
 @Database(
-    entities = [FavoriteEntity::class],
-    version = 1,
+    entities = [Game::class,FavoriteEntity::class],
+    version = 2,
     exportSchema = false
 )
 abstract class GameBaseDatabase : RoomDatabase() {
     abstract fun favoriteDao(): FavoriteDAO
+    abstract fun gameDao() : GameDAO
 
     companion object {
         @Volatile
@@ -25,7 +28,9 @@ abstract class GameBaseDatabase : RoomDatabase() {
                     context.applicationContext,
                     GameBaseDatabase::class.java,
                     "gamebase_database"
-                ).build()
+                )
+                    .fallbackToDestructiveMigration(true)
+                    .build()
                 INSTANCE = instance
                 instance
             }

@@ -37,7 +37,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ir.mrghost.gamebase.R
-import ir.mrghost.gamebase.data.local.Game
+import ir.mrghost.gamebase.data.local.games.Game
 import ir.mrghost.gamebase.utils.HeaderIcon
 import ir.mrghost.gamebase.utils.Utils
 import ir.mrghost.gamebase.viewmodel.GameDetailViewModel

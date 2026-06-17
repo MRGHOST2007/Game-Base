@@ -28,7 +28,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import ir.mrghost.gamebase.R
-import ir.mrghost.gamebase.data.local.Game
+import ir.mrghost.gamebase.data.local.games.Game
 
 @Composable
 fun GameItem(game: Game, typeGameView: TypeGameView, navController: NavController) {
