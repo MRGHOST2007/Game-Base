@@ -17,14 +17,14 @@ object AppModule {
         GameBaseDatabase.getInstance(appContext)
     }
 
-    private val repository: GameRepository by lazy {
+    private val gameRepository: GameRepository by lazy {
         FakeGameRepository()
     }
 
-    val favoritesRepository: FavoritesRepository by lazy {
+    private val favoritesRepository: FavoritesRepository by lazy {
         FavoritesRepository(database.favoriteDao())
     }
 
-    fun provideGameRepository(): GameRepository = repository
+    fun provideGameRepository(): GameRepository = gameRepository
     fun provideFavoritesRepository(): FavoritesRepository = favoritesRepository
 }

@@ -18,6 +18,7 @@ import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -35,6 +36,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import ir.mrghost.gamebase.screens.FavoritesScreen
 import ir.mrghost.gamebase.screens.GameDetailScreen
 import ir.mrghost.gamebase.screens.GamesListScreen
 import ir.mrghost.gamebase.screens.HomeScreen
@@ -73,7 +75,7 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun MainScreen(navController: NavController) {
-        val pagerState = rememberPagerState(pageCount = { 2 })
+        val pagerState = rememberPagerState(pageCount = { 3 })
 
         Scaffold(
             modifier = Modifier
@@ -83,7 +85,7 @@ class MainActivity : ComponentActivity() {
             },
             floatingActionButtonPosition = FabPosition.Center
         ) { paddingValues ->
-            HomeDualScreen(
+            HomeScreensPager(
                 pagerState,
                 navController = navController,
                 modifier = Modifier.padding(paddingValues)
@@ -92,11 +94,12 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    fun HomeDualScreen(pagerState: PagerState, navController: NavController, modifier: Modifier) {
+    fun HomeScreensPager(pagerState: PagerState, navController: NavController, modifier: Modifier) {
         HorizontalPager(state = pagerState, modifier = modifier) {
             when (it) {
                 0 -> HomeScreen(navController)
                 1 -> GamesListScreen(navController)
+                2 -> FavoritesScreen(navController)
             }
         }
     }
@@ -114,7 +117,7 @@ class MainActivity : ComponentActivity() {
         ) {
             Surface(
                 modifier = Modifier
-                    .fillMaxWidth(0.7f),
+                    .fillMaxWidth(),
                 shape = CircleShape,
                 color = Color.Transparent,
                 border = Utils.CustomBorder,
@@ -124,6 +127,7 @@ class MainActivity : ComponentActivity() {
 
                 BottomAppBar(
                     containerColor = BottomAppBarDefaults.containerColor.copy(alpha = .75f),
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     NavigationBarItem(
                         selected = pagerState.currentPage == 0,
@@ -141,7 +145,7 @@ class MainActivity : ComponentActivity() {
                                 contentDescription = null
                             )
                         },
-                        label = { Text("Home") },
+                        label = { Text("Home", style = MaterialTheme.typography.bodyLarge) },
                         alwaysShowLabel = false
                     )
                     NavigationBarItem(
@@ -160,7 +164,26 @@ class MainActivity : ComponentActivity() {
                                 contentDescription = null
                             )
                         },
-                        label = { Text("Games") },
+                        label = { Text("Games", style = MaterialTheme.typography.bodyLarge) },
+                        alwaysShowLabel = false
+                    )
+                    NavigationBarItem(
+                        selected = pagerState.currentPage == 2,
+                        onClick = {
+                            coroutine.launch {
+                                pagerState.animateScrollToPage(
+                                    2,
+                                    animationSpec = spring(stiffness = Spring.StiffnessLow)
+                                )
+                            }
+                        },
+                        icon = {
+                            Icon(
+                                painter = painterResource(R.drawable.star_24),
+                                contentDescription = null
+                            )
+                        },
+                        label = { Text("Favorites", style = MaterialTheme.typography.bodyLarge) },
                         alwaysShowLabel = false
                     )
                 }
