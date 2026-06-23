@@ -3,7 +3,7 @@ package ir.mrghost.gamebase.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ir.mrghost.gamebase.AppModule
-import ir.mrghost.gamebase.data.local.games.Game
+import ir.mrghost.gamebase.data.local.Game
 import ir.mrghost.gamebase.data.local.GameRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

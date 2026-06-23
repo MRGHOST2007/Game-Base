@@ -46,7 +46,7 @@ fun FavoritesScreen(navController: NavController) {
             ) {
                 Text(
                     text = "No favorites yet\nStart adding games you love!",
-                    style = MaterialTheme.typography.headlineMedium,
+                    style = MaterialTheme.typography.headlineSmall,
                     textAlign = androidx.compose.ui.text.style.TextAlign.Center
                 )
             }

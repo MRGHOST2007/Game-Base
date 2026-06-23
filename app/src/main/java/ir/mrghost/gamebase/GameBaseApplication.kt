@@ -9,9 +9,5 @@ class GameBaseApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         AppModule.init(this)
-
-        CoroutineScope(Dispatchers.IO).launch {
-            AppModule.initializeDatabase()
-        }
     }
 }

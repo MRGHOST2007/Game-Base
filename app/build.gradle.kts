@@ -17,9 +17,8 @@ android {
         applicationId = "ir.mrghost.gamebase"
         minSdk = 24
         targetSdk = 36
-        versionCode = 4
-        versionName = "1.4"
-
+        versionCode = 6
+        versionName = "2.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -72,9 +71,22 @@ dependencies {
     //Pager
     implementation(libs.androidx.compose.foundation)
 
+    //ViewModel
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
+    //Room Database
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
+
+    //Retrofit
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.logging.interceptor)
+
+    //WebView
+    implementation(libs.androidx.webkit)
+
+    //Coil ImageLoader
+    implementation(libs.coil.compose)
 }

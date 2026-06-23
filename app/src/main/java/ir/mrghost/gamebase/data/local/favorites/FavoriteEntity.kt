@@ -2,7 +2,7 @@ package ir.mrghost.gamebase.data.local.favorites
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import ir.mrghost.gamebase.data.local.games.Game
+import ir.mrghost.gamebase.data.local.Game
 import ir.mrghost.gamebase.utils.GameGenre
 
 @Entity(tableName = "favorites")

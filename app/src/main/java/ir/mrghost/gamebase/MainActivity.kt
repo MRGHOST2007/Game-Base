@@ -40,9 +40,12 @@ import ir.mrghost.gamebase.screens.FavoritesScreen
 import ir.mrghost.gamebase.screens.GameDetailScreen
 import ir.mrghost.gamebase.screens.GamesListScreen
 import ir.mrghost.gamebase.screens.HomeScreen
+import ir.mrghost.gamebase.screens.ReviewDetailScreen
+import ir.mrghost.gamebase.screens.ReviewsScreen
 import ir.mrghost.gamebase.ui.theme.GameBaseTheme
 import ir.mrghost.gamebase.utils.Utils
 import kotlinx.coroutines.launch
+import java.net.URLDecoder
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,14 +61,28 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable(
-                        "detail/{gameId}",
-                        arguments = listOf(
+                        "detail/{gameId}", arguments = listOf(
                             navArgument("gameId") { type = NavType.LongType })
                     ) { backStackEntry ->
                         val gameId = backStackEntry.arguments?.getLong("gameId") ?: 0L
 
                         GameDetailScreen(gameID = gameId)
 
+                    }
+
+                    composable(
+                        "review/{reviewUrl}", arguments = (listOf(
+                            navArgument("reviewUrl") {
+                                type = NavType.StringType
+                                defaultValue = ""
+                            }))
+                    ) { backStackEntry ->
+                        val encodedUrl = backStackEntry.arguments?.getString("reviewUrl") ?: ""
+
+                        if (encodedUrl.isNotBlank()){
+                            val decodedUrl = URLDecoder.decode(encodedUrl, "UTF-8")
+                            ReviewDetailScreen(decodedUrl, navController)
+                        }
                     }
 
                 }
@@ -75,15 +92,12 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun MainScreen(navController: NavController) {
-        val pagerState = rememberPagerState(pageCount = { 3 })
+        val pagerState = rememberPagerState(pageCount = { 4 }, initialPage = 0)
 
         Scaffold(
-            modifier = Modifier
-                .fillMaxSize(),
-            floatingActionButton = {
+            modifier = Modifier.fillMaxSize(), floatingActionButton = {
                 MainBottomAppBar(pagerState)
-            },
-            floatingActionButtonPosition = FabPosition.Center
+            }, floatingActionButtonPosition = FabPosition.Center
         ) { paddingValues ->
             HomeScreensPager(
                 pagerState,
@@ -100,6 +114,7 @@ class MainActivity : ComponentActivity() {
                 0 -> HomeScreen(navController)
                 1 -> GamesListScreen(navController)
                 2 -> FavoritesScreen(navController)
+                3 -> ReviewsScreen(navController)
             }
         }
     }
@@ -116,8 +131,7 @@ class MainActivity : ComponentActivity() {
             contentAlignment = Alignment.BottomCenter
         ) {
             Surface(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 shape = CircleShape,
                 color = Color.Transparent,
                 border = Utils.CustomBorder,
@@ -134,8 +148,7 @@ class MainActivity : ComponentActivity() {
                         onClick = {
                             coroutine.launch {
                                 pagerState.animateScrollToPage(
-                                    0,
-                                    animationSpec = spring(stiffness = Spring.StiffnessLow)
+                                    0, animationSpec = spring(stiffness = Spring.StiffnessLow)
                                 )
                             }
                         },
@@ -153,8 +166,7 @@ class MainActivity : ComponentActivity() {
                         onClick = {
                             coroutine.launch {
                                 pagerState.animateScrollToPage(
-                                    1,
-                                    animationSpec = spring(stiffness = Spring.StiffnessLow)
+                                    1, animationSpec = spring(stiffness = Spring.StiffnessLow)
                                 )
                             }
                         },
@@ -172,8 +184,7 @@ class MainActivity : ComponentActivity() {
                         onClick = {
                             coroutine.launch {
                                 pagerState.animateScrollToPage(
-                                    2,
-                                    animationSpec = spring(stiffness = Spring.StiffnessLow)
+                                    2, animationSpec = spring(stiffness = Spring.StiffnessLow)
                                 )
                             }
                         },
@@ -184,6 +195,24 @@ class MainActivity : ComponentActivity() {
                             )
                         },
                         label = { Text("Favorites", style = MaterialTheme.typography.bodyLarge) },
+                        alwaysShowLabel = false
+                    )
+                    NavigationBarItem(
+                        selected = pagerState.currentPage == 3,
+                        onClick = {
+                            coroutine.launch {
+                                pagerState.animateScrollToPage(
+                                    3, animationSpec = spring(stiffness = Spring.StiffnessLow)
+                                )
+                            }
+                        },
+                        icon = {
+                            Icon(
+                                painter = painterResource(R.drawable.article_24),
+                                contentDescription = null
+                            )
+                        },
+                        label = { Text("Reviews", style = MaterialTheme.typography.bodyLarge) },
                         alwaysShowLabel = false
                     )
                 }

@@ -28,7 +28,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import ir.mrghost.gamebase.R
-import ir.mrghost.gamebase.data.local.games.Game
+import ir.mrghost.gamebase.data.local.Game
 
 @Composable
 fun GameItem(game: Game, typeGameView: TypeGameView, navController: NavController) {
@@ -62,8 +62,9 @@ fun GameItem(game: Game, typeGameView: TypeGameView, navController: NavControlle
 
 @Composable
 private fun ContentOfItem(game: Game, navController: NavController) {
+    val imageRes = if (game.image != 0) game.image else R.drawable.placeholder
     Image(
-        painter = painterResource(game.image),
+        painter = painterResource(imageRes),
         contentDescription = null,
         contentScale = ContentScale.Crop,
         modifier = Modifier

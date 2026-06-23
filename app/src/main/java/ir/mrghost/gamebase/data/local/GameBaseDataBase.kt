@@ -6,17 +6,15 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import ir.mrghost.gamebase.data.local.favorites.FavoriteDAO
 import ir.mrghost.gamebase.data.local.favorites.FavoriteEntity
-import ir.mrghost.gamebase.data.local.games.Game
-import ir.mrghost.gamebase.data.local.games.GameDAO
+import ir.mrghost.gamebase.data.local.Game
 
 @Database(
-    entities = [Game::class,FavoriteEntity::class],
-    version = 2,
+    entities = [FavoriteEntity::class],
+    version = 1,
     exportSchema = false
 )
 abstract class GameBaseDatabase : RoomDatabase() {
     abstract fun favoriteDao(): FavoriteDAO
-    abstract fun gameDao() : GameDAO
 
     companion object {
         @Volatile

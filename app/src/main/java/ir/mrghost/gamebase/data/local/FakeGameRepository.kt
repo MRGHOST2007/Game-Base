@@ -1,7 +1,7 @@
 package ir.mrghost.gamebase.data.local
 
 import ir.mrghost.gamebase.R
-import ir.mrghost.gamebase.data.local.games.Game
+import ir.mrghost.gamebase.data.local.Game
 import ir.mrghost.gamebase.utils.GameGenre
 
 interface GameRepository {

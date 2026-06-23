@@ -37,7 +37,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ir.mrghost.gamebase.R
-import ir.mrghost.gamebase.data.local.games.Game
+import ir.mrghost.gamebase.data.local.Game
 import ir.mrghost.gamebase.utils.HeaderIcon
 import ir.mrghost.gamebase.utils.Utils
 import ir.mrghost.gamebase.viewmodel.GameDetailViewModel
@@ -103,8 +103,9 @@ fun GameDetailContent(game: Game, isFavorite: Boolean, onClick: () -> Unit) {
                     .fillMaxWidth(),
                 contentAlignment = Alignment.BottomCenter
             ) {
+                val imageRes = if (game.image != 0) game.image else R.drawable.placeholder
                 Image(
-                    painter = painterResource(game.image),
+                    painter = painterResource(imageRes),
                     contentDescription = null,
                     contentScale = ContentScale.FillWidth,
                     modifier = Modifier.fillMaxWidth()
