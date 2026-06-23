@@ -61,6 +61,14 @@ This project follows a modern, scalable architecture based on **Clean Architectu
 
 ---
 
+## 📚 Documentation
+
+For complete technical documentation, including architecture, API integration, database schema, and development guide, see:
+
+**[📖 Full Documentation (DOCUMENTATION.md)](Documentation.md)**
+
+---
+
 ## 🛠️ Tech Stack
 
 ### Core
