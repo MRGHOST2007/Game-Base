@@ -80,7 +80,8 @@ fun ReviewsScreen(navController: NavController) {
                         )
                         Button(onClick = {
                             viewModel.loadReviews()
-                        }) {
+                        },
+                            shape = CircleShape) {
                             Text(
                                 "Retry",
                                 style = MaterialTheme.typography.bodyLarge
