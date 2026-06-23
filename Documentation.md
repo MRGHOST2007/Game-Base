@@ -1,6 +1,6 @@
 # 📚 GameBase - Full Project Documentation
 
-**Version:** 1.6  
+**Version:** 2.0 
 **Last Updated:** June 23, 2026  
 **Author:** Amir Mahdi Heidary (MRGHOST2007)
 
