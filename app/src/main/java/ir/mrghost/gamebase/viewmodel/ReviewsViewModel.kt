@@ -22,6 +22,9 @@ class ReviewsViewModel : ViewModel() {
     private val _isLoadingMore = MutableStateFlow(false)
     val isLoadingMore: StateFlow<Boolean> = _isLoadingMore.asStateFlow()
 
+    private val _isLoaded = MutableStateFlow(false)
+    val isLoaded: StateFlow<Boolean> = _isLoaded.asStateFlow()
+
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error.asStateFlow()
 
@@ -29,7 +32,12 @@ class ReviewsViewModel : ViewModel() {
     private var hasMorePages = true
     private val perPage = 10
 
-    fun loadReviews() {
+    fun loadReviews(forceRefresh: Boolean = false) {
+
+        if (_isLoaded.value && !forceRefresh) {
+            return
+        }
+
         viewModelScope.launch {
             _isLoading.value = true
             _error.value = null
@@ -52,36 +60,38 @@ class ReviewsViewModel : ViewModel() {
                 _reviews.value = result
             }
 
+            _isLoaded.value = true
             _isLoading.value = false
         }
     }
 
-    fun loadMore(){
+    fun loadMore() {
         if (isLoadingMore.value || !hasMorePages) return
 
         viewModelScope.launch {
             _isLoadingMore.value = true
-            val nextPage = currentPage+1
+            val nextPage = currentPage + 1
             val result = repository.getReviews(nextPage, perPage)
 
-            if (result.isNotEmpty()){
-                val currentList = reviews.value.toMutableList()
-                result.forEach {
+            if (result.isNotEmpty()) {
+                for (it in result) {
                     it.featuredMedia?.let { mediaId ->
                         val media = repository.getMedia(mediaId)
                         it.imageUrl = media?.sourceUrl
                     }
+                    if (it.link.isEmpty()) {
+                        it.link = "https://gameblade.ir/review-${it.slug}/"
+                    }
                 }
+                val currentList = _reviews.value.toMutableList()
                 currentList.addAll(result)
                 _reviews.value = currentList
-                checkHasMore(result)
-            }
-        }
-    }
 
-    private fun checkHasMore(reviews: List<ReviewResponse>) {
-        // If we got less than perPage, there are no more pages
-        hasMorePages = reviews.size >= perPage
+                currentPage = nextPage
+            }
+
+            _isLoadingMore.value = false
+        }
     }
 
 }

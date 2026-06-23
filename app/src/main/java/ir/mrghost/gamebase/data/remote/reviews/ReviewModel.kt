@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 data class ReviewResponse(
     @SerializedName("id") val id: Int,
     @SerializedName("date") val date: String,
-    @SerializedName("link") val link: String,
+    @SerializedName("link") var link: String,
     @SerializedName("title") val title: Title,
     @SerializedName("content") val content: Content,
     @SerializedName("slug") val slug: String,

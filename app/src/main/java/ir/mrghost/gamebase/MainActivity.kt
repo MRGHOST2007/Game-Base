@@ -81,7 +81,7 @@ class MainActivity : ComponentActivity() {
 
                         if (encodedUrl.isNotBlank()){
                             val decodedUrl = URLDecoder.decode(encodedUrl, "UTF-8")
-                            ReviewDetailScreen(decodedUrl, navController)
+                            ReviewDetailScreen(decodedUrl)
                         }
                     }
 
