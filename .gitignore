@@ -13,3 +13,16 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Android / Kotlin
+*.apk
+*.ap_
+*.aab
+*.dex
+*.class
+*.log
+*.jks
+*.keystore
+.kotlin/
+*.db
+Thumbs.db
