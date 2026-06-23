@@ -25,7 +25,6 @@
 15. [Future Roadmap](#15-future-roadmap)
 16. [Contributing Guidelines](#16-contributing-guidelines)
 17. [Troubleshooting](#17-troubleshooting)
-18. [FAQ](#18-faq)
 
 ---
 
